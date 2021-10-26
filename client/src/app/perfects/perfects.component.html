@@ -1,0 +1,41 @@
+<div class="Block">
+    <label id="lbl">CSV File : </label>&nbsp;
+    <input type='file' (change)="fileChanged($event)">
+  
+  </div>
+<div class="container">
+    <div class="form-inline">
+        <div class="btn-group">
+            <button class="btn btn-primary" btnRadio='LoadEmployee'
+            (click)="onClickEmp()">
+                <i class="fa fa-address-card"></i> Load Employee
+            </button>
+            <button class="btn btn-primary" btnRadio='LoadAccrual'
+            (click)="onClickAcr()">
+                <i class="fa fa-envelope"></i> Load Accrual by Fund
+            </button>      
+        </div>&nbsp;&nbsp;
+        <div class="btn-group">
+            <button class="btn btn-primary" btnRadio='Excel'
+            (click)="exportExcel()">
+                <i class="fa fa-file-excel-o"></i> Export to Excel
+            </button>
+        </div>&nbsp;&nbsp;&nbsp;
+        <div class="btn-group">
+            <button class="btn btn-primary" btnRadio='Excel'
+            (click)="deleteData()">
+                <i class="fa fa-trash"></i> Clear Data
+            </button>
+        </div>&nbsp;&nbsp;
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default center-block"><input *ngIf="drecsAcr" [(ngModel)]="drecsAcr.myob" type="radio" class="btn-check" name="myobtype" id="btnradio1" autocomplete="off" [value]="0" (change)="onItemChange(drecsAcr)">&nbsp;Online</label>
+            <label class="btn btn-default center-block"><input *ngIf="drecsAcr" [(ngModel)]="drecsAcr.myob" type="radio" class="btn-check" name="myobtype" id="btnradio1" autocomplete="off" [value]="1" (change)="onItemChange(drecsAcr)">&nbsp;Standalone</label>
+        </div>&nbsp;&nbsp;
+    </div>
+</div>
+<div class="row">
+    <p *ngIf="drecsEmp && drecsAcr">Employee data last updated at&nbsp;{{ drecsEmp.updated | date:'dd/MM/yyyy HH:mm'}}&nbsp;{{ drecsEmp.desc}}&nbsp;&nbsp;&nbsp; Accrual By Fund Report last updated at&nbsp;{{ drecsAcr.updated | date:'dd/MM/yyyy HH:mm'}}&nbsp;{{ drecsAcr.desc}}&nbsp;&nbsp;</p>
+</div>
+<div class="row">
+    <ng2-smart-table *ngIf="accrual" [settings]="settings" [source]="accrual"></ng2-smart-table>
+</div>
