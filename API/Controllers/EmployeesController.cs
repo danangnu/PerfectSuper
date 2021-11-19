@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +35,7 @@ namespace API.Controllers
         }
 
         [HttpPost("addcsv")]
-        public async Task<IActionResult> SeedEmployee([FromBody] string RawData)
+        public async Task<IActionResult> SeedEmployee(IFormFile file)
         {
             if (await _context.tblEmployees.AnyAsync())
             {
@@ -57,173 +59,194 @@ namespace API.Controllers
                 }
             }
 
-            string[] lines = RawData.Split(
-                    new[] { Environment.NewLine },
-                    StringSplitOptions.None
-                    );
-
-            DateTime? sdate = new DateTime();
-            sdate = Convert.ToDateTime("1971-01-01 00:00:00");
-            foreach (var line in lines)
+            using (var sreader = new StreamReader(file.OpenReadStream()))
             {
-                if (line == "{}")             
+                while (!sreader.EndOfStream) 
                 {
-                    continue;   
-                }
+                    var line = sreader.ReadLine();
+                    DateTime? sdate = new DateTime();
+                    sdate = Convert.ToDateTime("1971-01-01 00:00:00");
 
-                string[] data = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
-                Regex _isNumber = new Regex(@"^\d+$");
-                if (data.ElementAtOrDefault(2) != null)
-                {
-                    if (_isNumber.IsMatch(data.ElementAtOrDefault(2).ToString()))
-                    {
-                        if (data.Length == 133)
+                    
+                        if (line == "{}")             
                         {
-                            var employee = new Employees();
-                            employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
-                            employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                            employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
-                            employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "");
-                            employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
-                            employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");
-                            employee.Address4 = data.ElementAtOrDefault(47).ToString().Replace("\"", "");
-                            employee.Locality = data.ElementAtOrDefault(8).ToString();
-                            employee.State = data.ElementAtOrDefault(9).ToString();
-                            employee.Postcode = data.ElementAtOrDefault(10).ToString();
-                            employee.Country = data.ElementAtOrDefault(11).ToString();
-                            employee.Email = data.ElementAtOrDefault(16).ToString();
-                            employee.Phone1 = data.ElementAtOrDefault(12).ToString();
-                            employee.Phone2 = data.ElementAtOrDefault(13).ToString();
-                            _context.tblEmployees.Add(employee);
-                            await _context.SaveChangesAsync();
-                            
-                            var payroll = new Payroll();
-                            payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
-                            payroll.MemberID = data.ElementAtOrDefault(117).ToString();
-                            payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107).ToString()))
-                            {
-                                DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(107).ToString());
-                                payroll.DOB = String.Format("{0:dd/MM/yyyy}", oDate);
-                            } else {
-                                payroll.DOB = data.ElementAtOrDefault(107).ToString();
-                            }
-                            payroll.Gender = data.ElementAtOrDefault(108).ToString();
-                            payroll.TFN = data.ElementAtOrDefault(118).ToString();
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(109).ToString()))
-                            {
-                                DateTime dDate;
-                                if (DateTime.TryParse(data.ElementAtOrDefault(109).ToString(), out dDate))
-                                {
-                                    DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(109).ToString());
-                                payroll.EmpStartDate = String.Format("{0:dd/MM/yyyy}", oDate);
-                                } else {
-                                    payroll.EmpStartDate = data.ElementAtOrDefault(109).ToString();
-                                }                               
-                            } else {
-                                payroll.EmpStartDate = null;
-                            }  
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(110).ToString()))
-                            {
-                                DateTime dDate;
-                                if (DateTime.TryParse(data.ElementAtOrDefault(110).ToString(), out dDate))
-                                {
-                                    DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(110).ToString());
-                                    payroll.EmpEndDate = String.Format("{0:dd/MM/yyyy}", oDate);
-                                } else
-                                {
-                                    payroll.EmpEndDate = data.ElementAtOrDefault(110).ToString();
-                                }
-                                
-                            } else {
-                                payroll.EmpEndDate = null;
-                            }                   
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(126).ToString()))
-                            {
-                                if (data.ElementAtOrDefault(126).ToString().Equals("C"))
-                                {
-                                    payroll.EmpStatus = "Casual";
-                                } else if (data.ElementAtOrDefault(126).ToString().Equals("F"))
-                                {
-                                    payroll.EmpStatus = "Full Time";
-                                }                                
-                            } else {
-                                payroll.EmpStatus = null;
-                            }                                  
-                            payroll.SuperUID = null;
-                            _context.tblPayroll.Add(payroll);
-                            await _context.SaveChangesAsync();
-                        } else {
-                            var employee = new Employees();
-                            employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
-                            employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                            employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
-                            employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "") + ", " + data.ElementAtOrDefault(5).ToString().Replace("\"", "");
-                            employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
-                            employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");
-                            employee.Address4 = data.ElementAtOrDefault(47).ToString().Replace("\"", "");
-                            employee.Locality = data.ElementAtOrDefault(8).ToString();
-                            employee.State = data.ElementAtOrDefault(9).ToString();
-                            employee.Postcode = data.ElementAtOrDefault(10).ToString();
-                            employee.Country = data.ElementAtOrDefault(11).ToString();
-                            employee.Email = data.ElementAtOrDefault(16).ToString();
-                            employee.Phone1 = data.ElementAtOrDefault(12).ToString();
-                            employee.Phone2 = data.ElementAtOrDefault(13).ToString();
-                            _context.tblEmployees.Add(employee);
-                            await _context.SaveChangesAsync();
-
-                            var payroll = new Payroll();
-                            payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
-                            payroll.MemberID = data.ElementAtOrDefault(117+1).ToString();
-                            payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107+1).ToString()))
-                            {
-                                DateTime dDate;
-                                if (DateTime.TryParse(data.ElementAtOrDefault(107+1).ToString(), out dDate))
-                                {
-                                    DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(107+1).ToString());
-                                    payroll.DOB = String.Format("{0:dd/MM/yyyy}", oDate);
-                                } else {
-                                    payroll.DOB = data.ElementAtOrDefault(107+1).ToString();
-                                }                               
-                            } else {
-                                payroll.DOB = data.ElementAtOrDefault(107+1).ToString();
-                            }
-                            payroll.Gender = data.ElementAtOrDefault(108+1).ToString();
-                            payroll.TFN = data.ElementAtOrDefault(118+1).ToString();
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(109+1).ToString()))
-                            {
-                                DateTime dDate;
-                                if (DateTime.TryParse(data.ElementAtOrDefault(109+1).ToString(), out dDate))
-                                {
-                                    DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(109+1).ToString());
-                                payroll.EmpStartDate = String.Format("{0:dd/MM/yyyy}", oDate);
-                                } else {
-                                    payroll.EmpStartDate = data.ElementAtOrDefault(109+1).ToString();
-                                }                                
-                            } else {
-                                payroll.EmpStartDate = null;
-                            }
-                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(110+1).ToString()))
-                            {
-                                DateTime dDate;
-                                if (DateTime.TryParse(data.ElementAtOrDefault(110+1).ToString(), out dDate))
-                                {
-                                    DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(110+1).ToString());
-                                    payroll.EmpEndDate = String.Format("{0:dd/MM/yyyy}", oDate);
-                                } else {
-                                    payroll.EmpEndDate = data.ElementAtOrDefault(110+1).ToString();
-                                }                                
-                            } else {
-                                payroll.EmpEndDate = null;
-                            }
-                            payroll.EmpStatus = data.ElementAtOrDefault(126+1).ToString();
-                            payroll.SuperUID = null;
+                            continue;   
                         }
+
+                        string[] data = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))", RegexOptions.Compiled);
+                        Regex _isNumber = new Regex(@"^\d+$");
+                        if (data.ElementAtOrDefault(2) != null)
+                        {
+                            if (_isNumber.IsMatch(data.ElementAtOrDefault(2).ToString()))
+                            {
+                                if (data.Length == 133)
+                                {
+                                    var employee = new Employees();
+                                    employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
+                                    employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                    employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "");
+                                    employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
+                                    employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");
+                                    employee.Address4 = data.ElementAtOrDefault(47).ToString().Replace("\"", "");
+                                    employee.Locality = data.ElementAtOrDefault(8).ToString();
+                                    employee.State = data.ElementAtOrDefault(9).ToString();
+                                    employee.Postcode = data.ElementAtOrDefault(10).ToString();
+                                    employee.Country = data.ElementAtOrDefault(11).ToString();
+                                    employee.Email = data.ElementAtOrDefault(16).ToString();
+                                    employee.Phone1 = data.ElementAtOrDefault(12).ToString();
+                                    employee.Phone2 = data.ElementAtOrDefault(13).ToString();
+                                    employee.CustomList2 = data.ElementAtOrDefault(82).ToString();
+                                    _context.tblEmployees.Add(employee);
+                            
+                                    var payroll = new Payroll();
+                                    payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    payroll.MemberID = data.ElementAtOrDefault(117).ToString();
+                                    payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107).ToString()))
+                                    {
+                                        DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(107).ToString());
+                                        payroll.DOB = String.Format("{0:dd/MM/yyyy}", oDate);
+                                    } else {
+                                        payroll.DOB = data.ElementAtOrDefault(107).ToString();
+                                    }
+                                    payroll.Gender = data.ElementAtOrDefault(108).ToString();
+                                    payroll.TFN = data.ElementAtOrDefault(118).ToString();
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(109).ToString()))
+                                    {
+                                        DateTime dDate;
+                                        if (DateTime.TryParse(data.ElementAtOrDefault(109).ToString(), out dDate))
+                                        {
+                                            DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(109).ToString());
+                                            payroll.EmpStartDate = String.Format("{0:dd/MM/yyyy}", oDate);
+                                        } else {
+                                            payroll.EmpStartDate = data.ElementAtOrDefault(109).ToString();
+                                        }                               
+                                    } else {
+                                        payroll.EmpStartDate = null;
+                                    }  
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(110).ToString()))
+                                    {
+                                        DateTime dDate;
+                                        if (DateTime.TryParse(data.ElementAtOrDefault(110).ToString(), out dDate))
+                                        {
+                                            DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(110).ToString());
+                                            payroll.EmpEndDate = String.Format("{0:dd/MM/yyyy}", oDate);
+                                        } else
+                                        {
+                                            payroll.EmpEndDate = data.ElementAtOrDefault(110).ToString();
+                                        }
+                                    } else {
+                                        payroll.EmpEndDate = null;
+                                    }            
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(125).ToString()))
+                                    {
+                                        if (data.ElementAtOrDefault(125).ToString().Equals("T"))
+                                        {
+                                            payroll.EmpCategory = "Temporary";
+                                        } else if (data.ElementAtOrDefault(125).ToString().Equals("P"))
+                                        {
+                                            payroll.EmpCategory = "Permanent";
+                                        }                          
+                                    } else {
+                                        payroll.EmpCategory = null;
+                                    }           
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(126).ToString()))
+                                    {
+                                        if (data.ElementAtOrDefault(126).ToString().Equals("C"))
+                                        {
+                                            payroll.EmpStatus = "Casual";
+                                        } else if (data.ElementAtOrDefault(126).ToString().Equals("F"))
+                                        {
+                                            payroll.EmpStatus = "Full Time";
+                                        } else if (data.ElementAtOrDefault(126).ToString().Equals("O"))
+                                        {
+                                            payroll.EmpStatus = "Other";
+                                        } else if (data.ElementAtOrDefault(126).ToString().Equals("P"))
+                                        {
+                                            payroll.EmpStatus = "Part Time";
+                                        }                              
+                                    } else {
+                                        payroll.EmpStatus = null;
+                                    }                                  
+                                    payroll.SuperUID = null;
+                                    _context.tblPayroll.Add(payroll);
+                                } else {
+                                    var employee = new Employees();
+                                    employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
+                                    employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                    employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "") + ", " + data.ElementAtOrDefault(5).ToString().Replace("\"", "");
+                                    employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
+                                    employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");
+                                    employee.Address4 = data.ElementAtOrDefault(47).ToString().Replace("\"", "");
+                                    employee.Locality = data.ElementAtOrDefault(8).ToString();
+                                    employee.State = data.ElementAtOrDefault(9).ToString();
+                                    employee.Postcode = data.ElementAtOrDefault(10).ToString();
+                                    employee.Country = data.ElementAtOrDefault(11).ToString();
+                                    employee.Email = data.ElementAtOrDefault(16).ToString();
+                                    employee.Phone1 = data.ElementAtOrDefault(12).ToString();
+                                    employee.Phone2 = data.ElementAtOrDefault(13).ToString();
+                                    employee.CustomList2 = data.ElementAtOrDefault(82).ToString();
+                                    _context.tblEmployees.Add(employee);                                  
+
+                                    var payroll = new Payroll();
+                                    payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    payroll.MemberID = data.ElementAtOrDefault(117+1).ToString();
+                                    payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107+1).ToString()))
+                                    {
+                                        DateTime dDate;
+                                        if (DateTime.TryParse(data.ElementAtOrDefault(107+1).ToString(), out dDate))
+                                        {
+                                            DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(107+1).ToString());
+                                            payroll.DOB = String.Format("{0:dd/MM/yyyy}", oDate);
+                                        } else {
+                                            payroll.DOB = data.ElementAtOrDefault(107+1).ToString();
+                                        }                               
+                                    } else {
+                                        payroll.DOB = data.ElementAtOrDefault(107+1).ToString();
+                                    }
+                                    payroll.Gender = data.ElementAtOrDefault(108+1).ToString();
+                                    payroll.TFN = data.ElementAtOrDefault(118+1).ToString();
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(109+1).ToString()))
+                                    {
+                                        DateTime dDate;
+                                        if (DateTime.TryParse(data.ElementAtOrDefault(109+1).ToString(), out dDate))
+                                        {
+                                            DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(109+1).ToString());
+                                            payroll.EmpStartDate = String.Format("{0:dd/MM/yyyy}", oDate);
+                                        } else {
+                                            payroll.EmpStartDate = data.ElementAtOrDefault(109+1).ToString();
+                                        }                                
+                                    } else {
+                                        payroll.EmpStartDate = null;
+                                    }
+                                    if (!string.IsNullOrEmpty(data.ElementAtOrDefault(110+1).ToString()))
+                                    {
+                                        DateTime dDate;
+                                        if (DateTime.TryParse(data.ElementAtOrDefault(110+1).ToString(), out dDate))
+                                        {
+                                            DateTime oDate = Convert.ToDateTime(data.ElementAtOrDefault(110+1).ToString());
+                                            payroll.EmpEndDate = String.Format("{0:dd/MM/yyyy}", oDate);
+                                        } else {
+                                            payroll.EmpEndDate = data.ElementAtOrDefault(110+1).ToString();
+                                        }                                
+                                    } else {
+                                        payroll.EmpEndDate = null;
+                                    }
+                                    payroll.EmpCategory = data.ElementAtOrDefault(125+1).ToString();
+                                    payroll.EmpStatus = data.ElementAtOrDefault(126+1).ToString();
+                                    payroll.SuperUID = null;
+                                    _context.tblPayroll.Add(payroll);   
+                                }
+                            }
                     }
                 }
             }
-            return Ok();
+            if (await _context.SaveChangesAsync() > 0) return Ok();
+            
+            return BadRequest("Cannot add new file");
         }
 
         [HttpPost("addcsv/offline")]

@@ -52,7 +52,9 @@ namespace API.Controllers
                             TFN = r.TFN,
                             EmpStartDate = r.EmpStartDate,
                             EmpEndDate = r.EmpEndDate,
+                            EmpCategory = r.EmpCategory,
                             EmpStatus = r.EmpStatus,
+                            CustomList2 = employee.CustomList2,
                             Email = employee.Email,
                             Phone1 = employee.Phone1,
                             Phone2 = employee.Phone2

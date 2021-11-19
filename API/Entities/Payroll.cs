@@ -13,6 +13,7 @@ namespace API.Entities
         public string TFN { get; set; }
         public string EmpStartDate { get; set; }
         public string EmpEndDate { get; set; }
+        public string EmpCategory { get; set; }
         public string EmpStatus { get; set; }
         public string SuperUID { get; set; }
     }
