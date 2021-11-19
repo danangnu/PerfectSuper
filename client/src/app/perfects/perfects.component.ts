@@ -1,11 +1,15 @@
 import { Template } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { Accrual } from '../_models/accrual';
 import { Datarecords } from '../_models/datarecords';
 import { AccrualsService } from '../_services/accruals.service';
+import { ConfirmService } from '../_services/confirm.service';
 import { DatarecordsService } from '../_services/datarecords.service';
+import { EmployeeService } from '../_services/employee.service';
 import { ExportExcelService } from '../_services/export-excel.service';
 
 @Component({
@@ -28,9 +32,13 @@ export class PerfectsComponent implements OnInit {
 
   constructor(
     private accrualService: AccrualsService,
+    private employeeService: EmployeeService,
     private datarecordsService: DatarecordsService,
     private ete: ExportExcelService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private confirmService: ConfirmService,
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -106,16 +114,65 @@ export class PerfectsComponent implements OnInit {
     this.file = e.target.files[0];
   }
 
-  uploadEmployee() {}
+  async uploadEmployee() {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      console.log(fileReader.result);
+    };
+    fileReader.readAsText(this.file);
+    const text = await new Response(this.file).text();
+    this.employeeService.saveEmployee(text).subscribe(() => {
+      this.postRequest('Employees', this.drecsAcr.myob);
+    });
+  }
 
-  uploadEmployee2() {}
+  async uploadEmployee2() {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      console.log(fileReader.result);
+    };
+    fileReader.readAsText(this.file);
+    const text = await new Response(this.file).text();
+    this.employeeService.saveEmployee2(text).subscribe(() => {
+      this.postRequest('Employees', this.drecsAcr.myob);
+    });
+  }
 
-  uploadAccrual() {}
+  async uploadAccrual() {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      console.log(fileReader.result);
+    };
+    fileReader.readAsText(this.file);
+    const text = await new Response(this.file).text();
+    this.accrualService.saveAccrual(text).subscribe(() => {
+      this.postRequest('Accrual', this.drecsAcr.myob);
+    });
+  }
 
-  uploadAccrual2() {}
+  async uploadAccrual2() {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      console.log(fileReader.result);
+    };
+    fileReader.readAsText(this.file);
+    const text = await new Response(this.file).text();
+    this.accrualService.saveAccrual2(text).subscribe(() => {
+      this.postRequest('Accrual', this.drecsAcr.myob);
+    });
+  }
 
   onItemChange(value) {
     this.value = value;
+  }
+
+  postRequest(id, myob: number) {
+    this.datarecordsService.updateRecords(id, myob).subscribe(() => {
+      this.toastr.success('Done');
+      this.router
+        .navigateByUrl('/', { skipLocationChange: true })
+        .then(() => this.router.navigate(['/perfects']));
+    });
   }
 
   openModal(template: TemplateRef<any>) {
@@ -141,5 +198,18 @@ export class PerfectsComponent implements OnInit {
     this.ete.exportExcel(reportData);
   }
 
-  deleteData() {}
+  deleteData() {
+    this.confirmService
+      .confirm('Confirm delete All DATA', 'This cannot be undone')
+      .subscribe((result) => {
+        if (result) {
+          this.accrualService.clearData().subscribe(() => {
+            this.toastr.success('Done');
+            this.router
+              .navigateByUrl('/', { skipLocationChange: true })
+              .then(() => this.router.navigate(['/perfects']));
+          });
+        }
+      });
+  }
 }
