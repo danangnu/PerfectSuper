@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers;
 using API.Data;
+using API.Interfaces;
 using API.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,6 +53,7 @@ namespace API
             // var logger = serviceProvider.GetService<ILogger<EmployeesController>>();
             // services.AddSingleton(typeof(ILogger), logger);
             services.AddControllers(o => o.InputFormatters.Insert(o.InputFormatters.Count, new TextPlainInputFormatter()));
+            services.AddScoped<IAccrualRepository, AccrualRepository>();
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseMySql(_config.GetConnectionString("DefaultConnection"), new MariaDbServerVersion(new Version(10, 3, 15)));

@@ -20,7 +20,7 @@ export class PerfectsComponent implements OnInit {
     myobtype: new FormControl('', Validators.required),
   });
   accrual: Accrual[];
-  accrualError: Accrual[];
+  accrualError: Accrual[] = [];
   drecsEmp: Datarecords;
   drecsAcr: Datarecords;
   dataForExcel = [];
@@ -81,7 +81,10 @@ export class PerfectsComponent implements OnInit {
         )
       ) {
         error += 1;
-        //this.accrualError.push(acc);
+        if (this.accrualError.length > 0) {
+          if (this.accrualError.indexOf(acc) === -1)
+            this.accrualError.push(acc);
+        } else this.accrualError.push(acc);
       }
     });
     return error;
@@ -182,7 +185,7 @@ export class PerfectsComponent implements OnInit {
   }
 
   exportExcel() {
-    this.accrual.forEach((row: any) => {
+    this.accrual.forEach((row) => {
       this.dataForExcel.push(Object.values(row));
     });
 

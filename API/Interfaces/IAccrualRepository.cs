@@ -9,6 +9,6 @@ namespace API.Interfaces
         void Update(Accrual tblAccrual);
         void Delete(Accrual tblAccrual);
         Task<bool> SaveAllAsync();
-        Task<IEnumerable<Accrual>> GetAccrualAsync();
+        Task<IEnumerable<dynamic>> GetAccrualErrorAsync();
     }
 }

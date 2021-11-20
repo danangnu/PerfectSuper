@@ -77,143 +77,150 @@
     }}&nbsp;&nbsp;
   </p>
 </div>
-<div class="row">
-  <font [size]="1">
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th>USI</th>
-          <th>PayrollID</th>
-          <th>MemberID</th>
-          <th>Last Name</th>
-          <th>First Name</th>
-          <th>DOB</th>
-          <th>Gender</th>
-          <th>SuperGuarantee</th>
-          <th>Spouse</th>
-          <th>SalarySacrifice</th>
-          <th>Redundancy</th>
-          <th>Productivity</th>
-          <th>EmployeeCategory</th>
-          <th>EmployeeBasis</th>
-          <th>CustomList2</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of accrual">
-          <td>{{ item.usi }}</td>
-          <td>{{ item.payrollID }}</td>
-          <td>{{ item.memberID }}</td>
-          <td>{{ item.lastName }}</td>
-          <td>{{ item.firstName }}</td>
-          <td>{{ item.dob }}</td>
-          <td>{{ item.gender }}</td>
-          <td>{{ item.superGuarantee | currency: "USD" }}</td>
-          <td>{{ item.spouse | currency: "USD" }}</td>
-          <td>{{ item.salarySacrifice | currency: "USD" }}</td>
-          <td>{{ item.redundancy | currency: "USD" }}</td>
-          <td>{{ item.productivity | currency: "USD" }}</td>
-          <td
-            [ngStyle]="{
-              'background-color': !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'red'
-                : 'white',
-              color: !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'white'
-                : 'black'
-            }"
-          >
-            {{ item.empCategory }}
-          </td>
-          <td
-            [ngStyle]="{
-              'background-color': !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'red'
-                : 'white',
-              color: !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'white'
-                : 'black'
-            }"
-          >
-            {{ item.empStatus }}
-          </td>
-          <td
-            [ngStyle]="{
-              'background-color': !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'red'
-                : 'white',
-              color: !(
-                (item.empCategory === 'Temporary' &&
-                  item.empStatus === 'Casual' &&
-                  item.customList2 === 'FTM') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Full Time' &&
-                  item.customList2 === 'Salaries') ||
-                (item.empCategory === 'Permanent' &&
-                  item.empStatus === 'Part Time' &&
-                  item.customList2 === 'Salaries')
-              )
-                ? 'white'
-                : 'black'
-            }"
-          >
-            {{ item.customList2 }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </font>
-</div>
+<tabset class="member-tabset">
+  <tab heading="List">
+    <div class="row">
+      <font [size]="1">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>USI</th>
+              <th>PayrollID</th>
+              <th>MemberID</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>DOB</th>
+              <th>Gender</th>
+              <th>SuperGuarantee</th>
+              <th>Spouse</th>
+              <th>SalarySacrifice</th>
+              <th>Redundancy</th>
+              <th>Productivity</th>
+              <th>EmployeeCategory</th>
+              <th>EmployeeBasis</th>
+              <th>CustomList2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of accrual">
+              <td>{{ item.usi }}</td>
+              <td>{{ item.payrollID }}</td>
+              <td>{{ item.memberID }}</td>
+              <td>{{ item.lastName }}</td>
+              <td>{{ item.firstName }}</td>
+              <td>{{ item.dob }}</td>
+              <td>{{ item.gender }}</td>
+              <td>{{ item.superGuarantee | currency: "USD" }}</td>
+              <td>{{ item.spouse | currency: "USD" }}</td>
+              <td>{{ item.salarySacrifice | currency: "USD" }}</td>
+              <td>{{ item.redundancy | currency: "USD" }}</td>
+              <td>{{ item.productivity | currency: "USD" }}</td>
+              <td
+                [ngStyle]="{
+                  'background-color': !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'red'
+                    : 'white',
+                  color: !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'white'
+                    : 'black'
+                }"
+              >
+                {{ item.empCategory }}
+              </td>
+              <td
+                [ngStyle]="{
+                  'background-color': !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'red'
+                    : 'white',
+                  color: !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'white'
+                    : 'black'
+                }"
+              >
+                {{ item.empStatus }}
+              </td>
+              <td
+                [ngStyle]="{
+                  'background-color': !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'red'
+                    : 'white',
+                  color: !(
+                    (item.empCategory === 'Temporary' &&
+                      item.empStatus === 'Casual' &&
+                      item.customList2 === 'FTM') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Full Time' &&
+                      item.customList2 === 'Salaries') ||
+                    (item.empCategory === 'Permanent' &&
+                      item.empStatus === 'Part Time' &&
+                      item.customList2 === 'Salaries')
+                  )
+                    ? 'white'
+                    : 'black'
+                }"
+              >
+                {{ item.customList2 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </font>
+    </div>
+  </tab>
+  <tab heading="Upload File">
+    <app-file-manager [accrual]="accrual"></app-file-manager>
+  </tab>
+</tabset>
 
 <ng-template #template>
   <div class="modal-header">
