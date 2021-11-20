@@ -1,18 +1,15 @@
-import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExportExcelService {
-
-  constructor() { }
+  constructor() {}
 
   // tslint:disable-next-line: typedef
   exportExcel(excelData) {
-
     // Title, Header & Data
     const title = excelData.title;
     const header = excelData.headers;
@@ -24,7 +21,6 @@ export class ExportExcelService {
     // tslint:disable-next-line: prefer-const
     let worksheet = workbook.addWorksheet('Super Perfect');
 
-
     // Add Row and formatting
     worksheet.mergeCells('C1', 'F4');
     // tslint:disable-next-line: prefer-const
@@ -35,7 +31,7 @@ export class ExportExcelService {
       size: 16,
       underline: 'single',
       bold: true,
-      color: { argb: '0085A3' }
+      color: { argb: '0085A3' },
     };
     titleRow.alignment = { vertical: 'middle', horizontal: 'center' };
 
@@ -44,19 +40,22 @@ export class ExportExcelService {
     // tslint:disable-next-line: prefer-const
     let d = new Date();
     // tslint:disable-next-line: prefer-const
-    if (d.getMonth() < 2)
-    {
-
+    if (d.getMonth() < 2) {
     }
     // tslint:disable-next-line: prefer-const
-    let date = d.getDate() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear();
+    let date =
+      d.getDate() +
+      '-' +
+      ('0' + (d.getMonth() + 1)).slice(-2) +
+      '-' +
+      d.getFullYear();
     // tslint:disable-next-line: prefer-const
     let dateCell = worksheet.getCell('G1');
     dateCell.value = date;
     dateCell.font = {
       name: 'Calibri',
       size: 12,
-      bold: true
+      bold: true,
     };
     dateCell.alignment = { vertical: 'middle', horizontal: 'center' };
 
@@ -72,18 +71,18 @@ export class ExportExcelService {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: '4167B8' },
-        bgColor: { argb: '' }
+        bgColor: { argb: '' },
       };
       cell.font = {
         bold: true,
         color: { argb: 'FFFFFF' },
-        size: 12
+        size: 12,
       };
     });
 
     // Adding Data with Conditional Formatting
     // tslint:disable-next-line: no-shadowed-variable
-    data.forEach( d => {
+    data.forEach((d) => {
       // tslint:disable-next-line: prefer-const
       let row = worksheet.addRow(d);
 
@@ -97,10 +96,9 @@ export class ExportExcelService {
       sales.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: color }
+        fgColor: { argb: color },
       };
-    }
-    );
+    });
 
     worksheet.getColumn(1).width = 16;
     worksheet.getColumn(2).width = 9;
@@ -141,15 +139,36 @@ export class ExportExcelService {
     footerRow.getCell(1).fill = {
       type: 'pattern',
       pattern: 'solid',
-      fgColor: { argb: 'FFB050' }
+      fgColor: { argb: 'FFB050' },
     };
-    worksheet.getCell(`H${footerRow.number - 1}`).value = { formula: `SUM(H7:H${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`I${footerRow.number - 1}`).value = { formula: `SUM(I7:I${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`J${footerRow.number - 1}`).value = { formula: `SUM(J7:J${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`K${footerRow.number - 1}`).value = { formula: `SUM(K7:K${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`L${footerRow.number - 1}`).value = { formula: `SUM(L7:L${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`M${footerRow.number - 1}`).value = { formula: `SUM(M7:M${footerRow.number - 2})`, date1904: false };
-    worksheet.getCell(`N${footerRow.number - 1}`).value = { formula: `SUM(N7:N${footerRow.number - 2})`, date1904: false };
+    worksheet.getCell(`H${footerRow.number - 1}`).value = {
+      formula: `SUM(H7:H${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`I${footerRow.number - 1}`).value = {
+      formula: `SUM(I7:I${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`J${footerRow.number - 1}`).value = {
+      formula: `SUM(J7:J${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`K${footerRow.number - 1}`).value = {
+      formula: `SUM(K7:K${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`L${footerRow.number - 1}`).value = {
+      formula: `SUM(L7:L${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`M${footerRow.number - 1}`).value = {
+      formula: `SUM(M7:M${footerRow.number - 2})`,
+      date1904: false,
+    };
+    worksheet.getCell(`N${footerRow.number - 1}`).value = {
+      formula: `SUM(N7:N${footerRow.number - 2})`,
+      date1904: false,
+    };
     // Merge Cells
     worksheet.mergeCells(`A${footerRow.number}:F${footerRow.number}`);
 
@@ -157,9 +176,10 @@ export class ExportExcelService {
     // tslint:disable-next-line: no-shadowed-variable
     workbook.xlsx.writeBuffer().then((data) => {
       // tslint:disable-next-line: prefer-const
-      let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      let blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
       fs.saveAs(blob, title + '.xlsx');
     });
-
   }
 }

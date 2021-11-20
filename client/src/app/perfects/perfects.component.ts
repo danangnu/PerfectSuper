@@ -1,9 +1,7 @@
-import { Template } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
 import { Accrual } from '../_models/accrual';
 import { Datarecords } from '../_models/datarecords';
 import { AccrualsService } from '../_services/accruals.service';
@@ -37,7 +35,6 @@ export class PerfectsComponent implements OnInit {
     private ete: ExportExcelService,
     private modalService: BsModalService,
     private confirmService: ConfirmService,
-    private toastr: ToastrService,
     private router: Router
   ) {}
 
@@ -168,7 +165,7 @@ export class PerfectsComponent implements OnInit {
 
   postRequest(id, myob: number) {
     this.datarecordsService.updateRecords(id, myob).subscribe(() => {
-      this.toastr.success('Done');
+      //this.toastr.success('Done');
       this.router
         .navigateByUrl('/', { skipLocationChange: true })
         .then(() => this.router.navigate(['/perfects']));
@@ -204,7 +201,7 @@ export class PerfectsComponent implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.accrualService.clearData().subscribe(() => {
-            this.toastr.success('Done');
+            //this.toastr.success('Done');
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => this.router.navigate(['/perfects']));
