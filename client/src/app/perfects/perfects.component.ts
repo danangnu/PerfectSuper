@@ -81,7 +81,7 @@ export class PerfectsComponent implements OnInit {
         )
       ) {
         error += 1;
-        this.accrualError.push(acc);
+        //this.accrualError.push(acc);
       }
     });
     return error;
