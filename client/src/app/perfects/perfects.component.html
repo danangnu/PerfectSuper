@@ -4,7 +4,7 @@
       <button
         class="btn btn-primary"
         btnRadio="Excel"
-        (click)="getErrors() > 0 ? openModal(template) : exportExcel"
+        (click)="getErrors() > 0 ? openModal(template) : open(content)"
       >
         <i class="fa fa-file-excel-o"></i> Export to Excel
       </button>
@@ -191,6 +191,51 @@
     <app-file-manager (nameEmitter)="receivename($event)"></app-file-manager>
   </tab>
 </tabset>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Please select excel result options
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="resulttype">Select Result Options</label>
+        <div class="input-group">
+          <select
+            class="form-select"
+            (change)="selectChangeHandler($event)"
+            aria-label="Default select example"
+          >
+            <option selected>Choose option</option>
+            <option value="1">Regular</option>
+            <option value="2">Sunsuper and member number is NULL</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="
+        modal.close('Save click'); selectedDevice > 0 ? exportExcel() : 0
+      "
+    >
+      Export
+    </button>
+  </div>
+</ng-template>
 
 <ng-template #template>
   <div class="modal-header">

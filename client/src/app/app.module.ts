@@ -13,6 +13,7 @@ import { NavComponent } from './nav/nav.component';
 import { PerfectsComponent } from './perfects/perfects.component';
 import { FormsModule } from '@angular/forms';
 import { FileManagerComponent } from './file-manager/file-manager.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { FileManagerComponent } from './file-manager/file-manager.component';
     ModalModule.forRoot(),
     TabsModule,
     FileUploadModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

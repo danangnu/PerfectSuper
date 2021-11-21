@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Accrual } from '../_models/accrual';
 import { Datarecords } from '../_models/datarecords';
@@ -26,7 +27,9 @@ export class PerfectsComponent implements OnInit {
   dataForExcel = [];
   file: any;
   value: any;
+  selectedDevice = 0;
   bsModelRef: BsModalRef;
+  closeResult = '';
 
   constructor(
     private accrualService: AccrualsService,
@@ -35,13 +38,43 @@ export class PerfectsComponent implements OnInit {
     private ete: ExportExcelService,
     private modalService: BsModalService,
     private confirmService: ConfirmService,
-    private router: Router
+    private router: Router,
+    private modalServices: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.loadAccrual();
     this.getUpdatedEmp();
     this.getUpdatedAcr();
+  }
+
+  selectChangeHandler(event: any) {
+    //update the ui
+    this.selectedDevice = event.target.value;
+    console.log(event.target.value);
+  }
+
+  open(content) {
+    this.modalServices
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   onClickEmp() {
