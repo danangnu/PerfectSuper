@@ -1,3 +1,30 @@
+<label>Select MYOB data source:</label>
+<div class="btn-group" data-toggle="buttons">
+  <label class="btn btn-default center-block"
+    ><input
+      *ngIf="drecsAcr"
+      [(ngModel)]="drecsAcr.myob"
+      type="radio"
+      name="myobtype"
+      id="btnradio1"
+      autocomplete="off"
+      [value]="0"
+      (change)="onItemChange(drecsAcr)"
+    />&nbsp;Online</label
+  >
+  <label class="btn btn-default center-block"
+    ><input
+      *ngIf="drecsAcr"
+      [(ngModel)]="drecsAcr.myob"
+      type="radio"
+      name="myobtype"
+      id="btnradio1"
+      autocomplete="off"
+      [value]="1"
+      (change)="onItemChange(drecsAcr)"
+    />&nbsp;Standalone</label
+  >
+</div>
 <div class="row mt-3">
   <div class="col-md-3">
     <h3>Add Files</h3>
@@ -13,11 +40,8 @@
       Drop files here
     </div>
 
-    Multiple
+    Browse
     <input type="file" ng2FileSelect [uploader]="uploader" multiple /><br />
-
-    Single
-    <input type="file" ng2FileSelect [uploader]="uploader" />
   </div>
 
   <div

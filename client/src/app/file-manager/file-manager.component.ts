@@ -1,9 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ThrowStmt } from '@angular/compiler';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
 import { Accrual } from '../_models/accrual';
+import { Datarecords } from '../_models/datarecords';
+import { AccrualsService } from '../_services/accruals.service';
+import { DatarecordsService } from '../_services/datarecords.service';
 
 @Component({
   selector: 'app-file-manager',
@@ -11,22 +14,51 @@ import { Accrual } from '../_models/accrual';
   styleUrls: ['./file-manager.component.css'],
 })
 export class FileManagerComponent implements OnInit {
-  @Input() accrual: Accrual;
+  accrual: Accrual[];
+  drecsAcr: Datarecords;
   uploader: FileUploader;
   hasBaseDropzoneOver = false;
   baseUrl = environment.apiUrl;
+  url: string;
+  @Output() nameEmitter = new EventEmitter<Accrual[]>();
+  value: any;
 
   constructor(
     private spinnerService: NgxSpinnerService,
-    private route: ActivatedRoute
-  ) {}
+    private accrualService: AccrualsService,
+    private datarecordsService: DatarecordsService
+  ) {
+    this.url = this.baseUrl + 'employees/addcsv';
+  }
 
   ngOnInit(): void {
+    this.getUpdatedAcr();
     this.initializeUploader();
   }
 
   fileOverBase(e: any) {
     this.hasBaseDropzoneOver = e;
+  }
+
+  getUpdatedAcr() {
+    this.datarecordsService.getRecords('accrual').subscribe((response) => {
+      this.drecsAcr = response;
+    });
+  }
+
+  postRequest(id, myob: number) {
+    this.datarecordsService.updateRecords(id, myob).subscribe((value) => {
+      this.drecsAcr.myob = value;
+    });
+  }
+
+  onItemChange(value) {
+    this.value = value;
+    if (value == 0) {
+      this.url = this.baseUrl + 'employees/addcsv';
+    } else {
+      this.url = this.baseUrl + 'employees/addcsv/offline';
+    }
   }
 
   initializeUploader() {
@@ -52,7 +84,18 @@ export class FileManagerComponent implements OnInit {
 
     this.uploader.onCompleteItem = (item: any, status: any) => {
       this.spinnerService.hide();
-      console.log('Uploaded File Details:', item?.file?.name);
+      //console.log('Uploaded File Details:', item?.file?.name);
+    };
+
+    this.uploader.onCompleteAll = () => {
+      this.postRequest('Employees', this.drecsAcr.myob);
+      this.postRequest('Accrual', this.drecsAcr.myob);
+      this.accrualService.getAccrual().subscribe((accrual) => {
+        this.accrual = accrual;
+        this.nameEmitter.emit(accrual);
+        //console.log(this.accruals);
+      });
+      //this.PostData();
     };
   }
 }

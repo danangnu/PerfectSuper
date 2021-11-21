@@ -90,6 +90,10 @@ export class PerfectsComponent implements OnInit {
     return error;
   }
 
+  getLength(): number {
+    return this.accrual.length;
+  }
+
   getHeaders() {
     const headers: string[] = [];
     if (this.accrual) {
@@ -108,6 +112,10 @@ export class PerfectsComponent implements OnInit {
     this.accrualService.getAccrual().subscribe((accrual) => {
       this.accrual = accrual;
     });
+  }
+
+  receivename($event: Accrual[]) {
+    this.accrual = $event;
   }
 
   fileChanged(e) {

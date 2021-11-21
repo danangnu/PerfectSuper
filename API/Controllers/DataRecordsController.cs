@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPost("updateDesc/{fn}/{value}")]
-        public async Task<IActionResult> UpdateDesc(string fn, int value)
+        public async Task<ActionResult<int>> UpdateDesc(string fn, int value)
         {
             var entity = await _context.tblDataRecords.FirstOrDefaultAsync(item => item.FieldName == fn);
             if (entity != null)
@@ -61,7 +61,7 @@ namespace API.Controllers
                     entity.Desc = "using MyOB Desktop";
                 await _context.SaveChangesAsync();
             }
-            return Ok();
+            return Ok(value);
         }
     }
 }
