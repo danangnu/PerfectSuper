@@ -25,6 +25,7 @@ export class PerfectsComponent implements OnInit {
   drecsEmp: Datarecords;
   drecsAcr: Datarecords;
   dataForExcel = [];
+  dataForExcel2 = [];
   file: any;
   value: any;
   selectedDevice = 0;
@@ -49,9 +50,8 @@ export class PerfectsComponent implements OnInit {
   }
 
   selectChangeHandler(event: any) {
-    //update the ui
     this.selectedDevice = event.target.value;
-    console.log(event.target.value);
+    console.log(this.selectedDevice);
   }
 
   open(content) {
@@ -115,9 +115,12 @@ export class PerfectsComponent implements OnInit {
       ) {
         error += 1;
         if (this.accrualError.length > 0) {
-          if (this.accrualError.indexOf(acc) === -1)
+          if (this.accrualError.indexOf(acc) === -1) {
             this.accrualError.push(acc);
-        } else this.accrualError.push(acc);
+          }
+        } else {
+          this.accrualError.push(acc);
+        }
       }
     });
     return error;
@@ -141,14 +144,66 @@ export class PerfectsComponent implements OnInit {
     return headers;
   }
 
+  loadAccrualExport() {
+    if (Number(this.selectedDevice) === 2) {
+      this.accrualService.getAccrual2().subscribe((accrual) => {
+        this.accrual = accrual;
+        accrual.forEach((row) => {
+          this.dataForExcel2.push(Object.values(row));
+        });
+        this.accrualService.getAccrualExcel2().subscribe((accrualin) => {
+          accrualin.forEach((row) => {
+            this.dataForExcel.push(Object.values(row));
+          });
+          const reportData = {
+            title: 'EmployeeDetails',
+            data: this.dataForExcel,
+            headers: Object.keys(accrualin[0]),
+          };
+          const reportData2 = {
+            title: 'PerfectSuper',
+            data: this.dataForExcel2,
+            headers: Object.keys(accrual[0]),
+          };
+          this.ete.exportExcel(reportData, reportData2);
+        });
+      });
+    } else {
+      this.accrualService.getAccrual().subscribe((accrual) => {
+        this.accrual = accrual;
+        accrual.forEach((row) => {
+          this.dataForExcel2.push(Object.values(row));
+        });
+        this.accrualService.getAccrualExcel().subscribe((accrualin) => {
+          accrualin.forEach((rowin) => {
+            this.dataForExcel.push(Object.values(rowin));
+          });
+          const reportData = {
+            title: 'PerfectSuper',
+            data: this.dataForExcel,
+            headers: Object.keys(accrualin[0]),
+          };
+          const reportData2 = {
+            title: 'PerfectSuper',
+            data: this.dataForExcel2,
+            headers: Object.keys(accrual[0]),
+          };
+          this.ete.exportExcel(reportData, reportData2);
+        });
+      });
+    }
+  }
+
   loadAccrual() {
     this.accrualService.getAccrual().subscribe((accrual) => {
       this.accrual = accrual;
     });
   }
 
-  receivename($event: Accrual[]) {
-    this.accrual = $event;
+  receivename($event: any) {
+    this.accrual = $event.make;
+    this.drecsAcr = $event.name;
+    this.drecsEmp = $event.sane;
   }
 
   fileChanged(e) {
@@ -209,7 +264,7 @@ export class PerfectsComponent implements OnInit {
 
   postRequest(id, myob: number) {
     this.datarecordsService.updateRecords(id, myob).subscribe(() => {
-      //this.toastr.success('Done');
+      // this.toastr.success('Done');
       this.router
         .navigateByUrl('/', { skipLocationChange: true })
         .then(() => this.router.navigate(['/perfects']));
@@ -225,27 +280,13 @@ export class PerfectsComponent implements OnInit {
     this.bsModelRef.hide();
   }
 
-  exportExcel() {
-    this.accrual.forEach((row) => {
-      this.dataForExcel.push(Object.values(row));
-    });
-
-    const reportData = {
-      title: 'PerfectSuper',
-      data: this.dataForExcel,
-      headers: Object.keys(this.accrual[0]),
-    };
-
-    this.ete.exportExcel(reportData);
-  }
-
   deleteData() {
     this.confirmService
       .confirm('Confirm delete All DATA', 'This cannot be undone')
       .subscribe((result) => {
         if (result) {
-          this.accrualService.clearData().subscribe(() => {
-            //this.toastr.success('Done');
+          this.employeeService.clearData().subscribe(() => {
+            // this.toastr.success('Done');
             this.router
               .navigateByUrl('/', { skipLocationChange: true })
               .then(() => this.router.navigate(['/perfects']));

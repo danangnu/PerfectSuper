@@ -1,8 +1,9 @@
 export interface Accrual {
   id: number;
   memberID: string;
+  otherGivenName: string;
   lastName: string;
-  firstName: string;
+  givenName: string;
   superFund: string;
   usi: string;
   superGuarantee: number;

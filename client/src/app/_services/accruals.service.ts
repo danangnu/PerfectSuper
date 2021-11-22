@@ -5,30 +5,52 @@ import { Accrual } from '../_models/accrual';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccrualsService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAccrual() {
-    return this.http.get<Accrual[]>(this.baseUrl + 'accrual');
-  }
-
-  saveAccrual(rdata: string) {
-    return this.http.post(this.baseUrl + 'accrual/addcsv', rdata).pipe(
+    return this.http.get<Accrual[]>(this.baseUrl + 'accrual').pipe(
       map((user) => {
-
+        return user;
       })
     );
   }
 
-  saveAccrual2(rdata: string) {
-    return this.http.post(this.baseUrl + 'accrual/addcsv/offline', rdata);
+  getAccrual2() {
+    return this.http.get<Accrual[]>(this.baseUrl + 'accrual/f2').pipe(
+      map((user) => {
+        return user;
+      })
+    );
   }
 
-  clearData() {
-    return this.http.delete(this.baseUrl + 'accrual');
+  getAccrualExcel() {
+    return this.http.get<Accrual[]>(this.baseUrl + 'accrual/excel').pipe(
+      map((user) => {
+        return user;
+      })
+    );
+  }
+
+  getAccrualExcel2() {
+    return this.http.get<Accrual[]>(this.baseUrl + 'accrual/excel2').pipe(
+      map((user) => {
+        return user;
+      })
+    );
+  }
+
+  saveAccrual(rdata: string) {
+    return this.http
+      .post(this.baseUrl + 'accrual/addcsv', rdata)
+      .pipe(map((user) => {}));
+  }
+
+  saveAccrual2(rdata: string) {
+    return this.http.post(this.baseUrl + 'accrual/addcsv/offline', rdata);
   }
 }

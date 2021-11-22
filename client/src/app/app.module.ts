@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -14,6 +14,7 @@ import { PerfectsComponent } from './perfects/perfects.component';
 import { FormsModule } from '@angular/forms';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FileUploadModule,
     NgbModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -16,12 +16,14 @@ import { DatarecordsService } from '../_services/datarecords.service';
 export class FileManagerComponent implements OnInit {
   accrual: Accrual[];
   drecsAcr: Datarecords;
+  drecsEmp: Datarecords;
   uploader: FileUploader;
   hasBaseDropzoneOver = false;
   baseUrl = environment.apiUrl;
   url: string;
-  @Output() nameEmitter = new EventEmitter<Accrual[]>();
+  @Output() nameEmitter = new EventEmitter<any>();
   value: any;
+  done: boolean;
 
   constructor(
     private spinnerService: NgxSpinnerService,
@@ -36,6 +38,10 @@ export class FileManagerComponent implements OnInit {
     this.initializeUploader();
   }
 
+  hideAlert() {
+    this.done = false;
+  }
+
   fileOverBase(e: any) {
     this.hasBaseDropzoneOver = e;
   }
@@ -48,13 +54,14 @@ export class FileManagerComponent implements OnInit {
 
   postRequest(id, myob: number) {
     this.datarecordsService.updateRecords(id, myob).subscribe((value) => {
-      this.drecsAcr.myob = value;
+      if (id === 'Employees') this.drecsEmp = value;
+      else this.drecsAcr = value;
     });
   }
 
   onItemChange(value) {
     this.value = value;
-    if (value == 0) {
+    if (value === 0) {
       this.url = this.baseUrl + 'employees/addcsv';
     } else {
       this.url = this.baseUrl + 'employees/addcsv/offline';
@@ -62,6 +69,7 @@ export class FileManagerComponent implements OnInit {
   }
 
   initializeUploader() {
+    this.done = false;
     this.uploader = new FileUploader({
       url: this.baseUrl + 'employees/addcsv',
       isHTML5: true,
@@ -84,7 +92,7 @@ export class FileManagerComponent implements OnInit {
 
     this.uploader.onCompleteItem = (item: any, status: any) => {
       this.spinnerService.hide();
-      //console.log('Uploaded File Details:', item?.file?.name);
+      // console.log('Uploaded File Details:', item?.file?.name);
     };
 
     this.uploader.onCompleteAll = () => {
@@ -92,10 +100,13 @@ export class FileManagerComponent implements OnInit {
       this.postRequest('Accrual', this.drecsAcr.myob);
       this.accrualService.getAccrual().subscribe((accrual) => {
         this.accrual = accrual;
-        this.nameEmitter.emit(accrual);
-        //console.log(this.accruals);
+        const drecsAcr = this.drecsAcr;
+        const drecsEmp = this.drecsEmp;
+        this.nameEmitter.emit({ make: accrual, name: drecsAcr, sane: drecsEmp });
+        // console.log(this.accruals);
       });
-      //this.PostData();
+      this.done = true;
+      // this.PostData();
     };
   }
 }

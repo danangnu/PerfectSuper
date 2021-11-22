@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPost("updateDesc/{fn}/{value}")]
-        public async Task<ActionResult<int>> UpdateDesc(string fn, int value)
+        public async Task<ActionResult<DataRecords>> UpdateDesc(string fn, int value)
         {
             var entity = await _context.tblDataRecords.FirstOrDefaultAsync(item => item.FieldName == fn);
             if (entity != null)
@@ -59,9 +59,9 @@ namespace API.Controllers
                     entity.Desc = "using MyOB Online";
                 else 
                     entity.Desc = "using MyOB Desktop";
-                await _context.SaveChangesAsync();
+                if (await _context.SaveChangesAsync() > 0) return entity;
             }
-            return Ok(value);
+            return BadRequest("Error save DataRecords");
         }
     }
 }

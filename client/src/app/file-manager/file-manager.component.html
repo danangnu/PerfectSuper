@@ -1,3 +1,14 @@
+<div class="alert alert-info alert-dismissible fade show" *ngIf="done">
+  <button
+    type="button"
+    class="close"
+    data-dismiss="alert"
+    (click)="hideAlert()"
+  >
+    &times;
+  </button>
+  <strong>Info!</strong> Files have been successfully uploaded!
+</div>
 <label>Select MYOB data source:</label>
 <div class="btn-group" data-toggle="buttons">
   <label class="btn btn-default center-block"

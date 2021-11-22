@@ -868,5 +868,47 @@ namespace API.Controllers
 
             return BadRequest("Failed to add new file");
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> ClearData()
+        {
+            if (await _context.tblAccrual.AnyAsync())
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "DELETE FROM [tblAccrual]";//"DELETE FROM [tblAccrual]";
+                        var result = await command.ExecuteNonQueryAsync();
+                        command.CommandText = "delete from sqlite_sequence where name='tblAccrual';";
+                        //command.CommandText = "ALTER TABLE tblAccrual AUTO_INCREMENT = 1";
+                        result = await command.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+
+            if (await _context.tblEmployees.AnyAsync())
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.OpenAsync();
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "DELETE FROM [tblEmployees]";//"DELETE FROM [tblEmployees]";
+                        var result = await command.ExecuteNonQueryAsync();
+                        command.CommandText = "delete from sqlite_sequence where name='tblEmployees';";
+                        //command.CommandText = "ALTER TABLE tblEmployees AUTO_INCREMENT = 1";
+                        result = await command.ExecuteNonQueryAsync();
+                        command.CommandText = "DELETE FROM [tblPayroll]";//"DELETE FROM [tblPayroll]";
+                        result = await command.ExecuteNonQueryAsync();
+                        command.CommandText = "delete from sqlite_sequence where name='tblPayroll';";
+                        //command.CommandText = "ALTER TABLE tblPayroll AUTO_INCREMENT = 1";
+                        result = await command.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            return Ok();
+        }
     }
 }

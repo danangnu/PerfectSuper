@@ -18,7 +18,7 @@ export class DatarecordsService {
 
   updateRecords(id: string, value: number) {
     return this.http
-      .post<number>(
+      .post<Datarecords>(
         this.baseUrl + 'datarecords/updateDesc/' + id + '/' + value,
         null
       )

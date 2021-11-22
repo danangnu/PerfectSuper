@@ -7,8 +7,10 @@ namespace API.Interfaces
     public interface IAccrualRepository
     {
         void Update(Accrual tblAccrual);
-        void Delete(Accrual tblAccrual);
         Task<bool> SaveAllAsync();
         Task<IEnumerable<dynamic>> GetAccrualErrorAsync();
+        Task<IEnumerable<dynamic>> GetAccrualAsync();
+        Task<IEnumerable<dynamic>> GetAccrualExcelAsync();
+        Task<IEnumerable<dynamic>> GetAccrualExcelFilterAsync();
     }
 }

@@ -33,7 +33,7 @@
 <tabset class="member-tabset">
   <tab heading="List">
     <div class="row">
-      <font [size]="1">
+      <font [size]="2">
         <table class="table table-condensed">
           <thead>
             <tr>
@@ -56,8 +56,8 @@
           </thead>
           <tbody>
             <tr *ngIf="accrual ? getLength() === 0 : null">
-              <td>No Data</td>
               <td></td>
+              <td>No Data</td>
               <td></td>
               <td></td>
               <td></td>
@@ -227,9 +227,9 @@
   <div class="modal-footer">
     <button
       type="button"
-      class="btn btn-outline-dark"
+      class="btn btn-success"
       (click)="
-        modal.close('Save click'); selectedDevice > 0 ? exportExcel() : 0
+        modal.close('Save click'); selectedDevice > 0 ? loadAccrualExport() : 0
       "
     >
       Export
