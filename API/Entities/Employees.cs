@@ -6,6 +6,7 @@ namespace API.Entities
         public int PayrollID { get; set; }
         public string FamilyName { get; set; }
         public string GivenName { get; set; }
+        public string OtherGivenName { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string Address3 { get; set; }

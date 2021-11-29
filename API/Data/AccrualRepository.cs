@@ -19,7 +19,7 @@ namespace API.Data
     public async Task<IEnumerable<dynamic>> GetAccrualErrorAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
@@ -64,7 +64,7 @@ namespace API.Data
     public async Task<IEnumerable<dynamic>> GetAccrualAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
@@ -108,13 +108,13 @@ namespace API.Data
     public async Task<IEnumerable<dynamic>> GetAccrualExcelAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
                             TFN = r.TFN,
                             GivenName = employee.GivenName,
-                            OtherGivenName = "",
+                            OtherGivenName = employee.OtherGivenName,
                             LastName = employee.FamilyName,
                             DOB = r.DOB,
                             PostalorResidential  = "",                       
@@ -132,14 +132,14 @@ namespace API.Data
     public async Task<IEnumerable<dynamic>> GetAccrualExcelFilterAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
                         select new {
                             TFN = r.TFN,
                             GivenName = employee.GivenName,
-                            OtherGivenName = "",
+                            OtherGivenName = employee.OtherGivenName,
                             LastName = employee.FamilyName,
                             DOB = r.DOB,
                             PostalorResidential  = "",                       

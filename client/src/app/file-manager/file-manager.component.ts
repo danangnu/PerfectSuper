@@ -24,6 +24,7 @@ export class FileManagerComponent implements OnInit {
   @Output() nameEmitter = new EventEmitter<any>();
   value: any;
   done: boolean;
+  count: number;
 
   constructor(
     private spinnerService: NgxSpinnerService,
@@ -70,6 +71,7 @@ export class FileManagerComponent implements OnInit {
 
   initializeUploader() {
     this.done = false;
+    this.count = 0;
     this.uploader = new FileUploader({
       url: this.baseUrl + 'employees/addcsv',
       isHTML5: true,
@@ -92,6 +94,7 @@ export class FileManagerComponent implements OnInit {
 
     this.uploader.onCompleteItem = (item: any, status: any) => {
       this.spinnerService.hide();
+      this.count++;
       // console.log('Uploaded File Details:', item?.file?.name);
     };
 
@@ -103,7 +106,7 @@ export class FileManagerComponent implements OnInit {
         const drecsAcr = this.drecsAcr;
         const drecsEmp = this.drecsEmp;
         this.nameEmitter.emit({ make: accrual, name: drecsAcr, sane: drecsEmp });
-        // console.log(this.accruals);
+        // console.log(this.count);
       });
       this.done = true;
       // this.PostData();

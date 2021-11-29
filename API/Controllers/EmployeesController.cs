@@ -419,8 +419,23 @@ namespace API.Controllers
                                 {
                                     var employee = new Employees();
                                     employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
-                                    employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                                    employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                    employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();                                   
+                                    string[] fname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart().Split(" ");
+                                    if (fname.Length > 1) {
+                                        employee.GivenName = fname[0].ToString().TrimEnd();
+                                        var oGivenName = string.Empty;
+                                        for (var j = 1; j < fname.Length; j++)
+                                        {
+                                            if (j == 1)
+                                                oGivenName =oGivenName + fname[j].ToString().TrimStart().TrimEnd();
+                                            else
+                                                oGivenName = oGivenName + " " + fname[j].ToString().TrimStart().TrimEnd();
+                                        }
+                                        employee.OtherGivenName = oGivenName;
+                                    } else {
+                                        employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                        employee.OtherGivenName = string.Empty;
+                                    }                                  
                                     employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "");
                                     employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
                                     employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");
@@ -511,7 +526,22 @@ namespace API.Controllers
                                     var employee = new Employees();
                                     employee.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
                                     employee.FamilyName = data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
-                                    employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                    string[] fname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart().Split(" ");
+                                    if (fname.Length > 1) {
+                                        employee.GivenName = fname[0].ToString().TrimEnd();
+                                        var oGivenName = string.Empty;
+                                        for (var j = 1; j < fname.Length; j++)
+                                        {
+                                            if (j == 1)
+                                                oGivenName = oGivenName + fname[j].ToString().TrimStart().TrimEnd();
+                                            else
+                                                oGivenName = oGivenName + " " + fname[j].ToString().TrimStart().TrimEnd();
+                                        }
+                                        employee.OtherGivenName = oGivenName;
+                                    } else {
+                                        employee.GivenName = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart();
+                                        employee.OtherGivenName = string.Empty;
+                                    } 
                                     employee.Address1 = data.ElementAtOrDefault(4).ToString().Replace("\"", "") + ", " + data.ElementAtOrDefault(5).ToString().Replace("\"", "");
                                     employee.Address2 = data.ElementAtOrDefault(19).ToString().Replace("\"", "");
                                     employee.Address3 = data.ElementAtOrDefault(33).ToString().Replace("\"", "");

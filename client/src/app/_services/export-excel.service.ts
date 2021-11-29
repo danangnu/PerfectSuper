@@ -88,7 +88,7 @@ export class ExportExcelService {
       let row = worksheet.addRow(d);
 
       // tslint:disable-next-line: prefer-const
-      let sales = row.getCell(2);
+      let sales = row.getCell(5);
       let color = 'FF99FF99';
       if (sales.value === null) {
         color = 'FF9999';
@@ -105,9 +105,11 @@ export class ExportExcelService {
     worksheet.getColumn(2).width = 25;
     worksheet.getColumn(3).width = 20;
     worksheet.getColumn(4).width = 25;
-    worksheet.getColumn(5).width = 21;
-    worksheet.getColumn(6).width = 11;
+    worksheet.getColumn(5).width = 12;
+    worksheet.getColumn(6).width = 25;
+    worksheet.getColumn(7).width = 30;
     worksheet.getColumn(8).width = 16;
+    worksheet.getColumn(9).width = 25;
     worksheet.getColumn(10).width = 15;
     worksheet.getColumn(11).width = 12;
     worksheet.getColumn(12).width = 13;
@@ -236,7 +238,7 @@ export class ExportExcelService {
     worksheet2.getColumn(3).width = 21;
     worksheet2.getColumn(4).width = 19;
     worksheet2.getColumn(5).width = 21;
-    worksheet2.getColumn(6).width = 11;
+    worksheet2.getColumn(6).width = 12;
     worksheet2.getColumn(8).width = 16;
     worksheet2.getColumn(10).width = 15;
     worksheet2.getColumn(11).width = 12;
