@@ -452,6 +452,7 @@ namespace API.Controllers
                             
                                     var payroll = new Payroll();
                                     payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    payroll.SuperFund = data.ElementAtOrDefault(116).ToString();
                                     payroll.MemberID = data.ElementAtOrDefault(117).ToString();
                                     payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
                                     if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107).ToString()))
@@ -558,6 +559,7 @@ namespace API.Controllers
 
                                     var payroll = new Payroll();
                                     payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                                    payroll.SuperFund = data.ElementAtOrDefault(116+1).ToString();
                                     payroll.MemberID = data.ElementAtOrDefault(117+1).ToString();
                                     payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
                                     if (!string.IsNullOrEmpty(data.ElementAtOrDefault(107+1).ToString()))
@@ -836,6 +838,7 @@ namespace API.Controllers
 
                             var payroll = new Payroll();
                             payroll.PayrollID = Int32.Parse(data.ElementAtOrDefault(2).ToString());
+                            payroll.SuperFund = data.ElementAtOrDefault(118).ToString();
                             payroll.MemberID = data.ElementAtOrDefault(119).ToString();
                             payroll.Fullname = data.ElementAtOrDefault(1).ToString().TrimEnd().TrimStart() + " " + data.ElementAtOrDefault(0).ToString().TrimEnd().TrimStart();
                             if (!string.IsNullOrEmpty(data.ElementAtOrDefault(109).ToString()))
@@ -873,7 +876,19 @@ namespace API.Controllers
                                 
                             } else {
                                 payroll.EmpEndDate = null;
-                            }                   
+                            }          
+                            if (!string.IsNullOrEmpty(data.ElementAtOrDefault(127).ToString()))
+                            {
+                                if (data.ElementAtOrDefault(127).ToString().Equals("T"))
+                                {
+                                    payroll.EmpCategory = "Temporary";
+                                } else if (data.ElementAtOrDefault(127).ToString().Equals("P"))
+                                {
+                                    payroll.EmpCategory = "Permanent";
+                                }                          
+                            } else {
+                                payroll.EmpCategory = null;
+                            }
                             if (!string.IsNullOrEmpty(data.ElementAtOrDefault(128).ToString()))
                             {
                                 if (data.ElementAtOrDefault(128).ToString().Equals("C"))
@@ -882,10 +897,16 @@ namespace API.Controllers
                                 } else if (data.ElementAtOrDefault(128).ToString().Equals("F"))
                                 {
                                     payroll.EmpStatus = "Full Time";
-                                }                                
+                                } else if (data.ElementAtOrDefault(128).ToString().Equals("O"))
+                                {
+                                    payroll.EmpStatus = "Other";
+                                } else if (data.ElementAtOrDefault(128).ToString().Equals("P"))
+                                {
+                                    payroll.EmpStatus = "Part Time";
+                                }                              
                             } else {
                                 payroll.EmpStatus = null;
-                            }                                  
+                            }                                             
                             payroll.SuperUID = null;
                             _context.tblPayroll.Add(payroll);
                         

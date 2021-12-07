@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211129024502_LatestTables")]
+    [Migration("20211207023053_LatestTables")]
     partial class LatestTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,6 +180,9 @@ namespace API.Data.Migrations
 
                     b.Property<int>("PayrollID")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SuperFund")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SuperUID")
                         .HasColumnType("TEXT");

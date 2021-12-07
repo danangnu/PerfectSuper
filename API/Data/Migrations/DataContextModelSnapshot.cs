@@ -179,6 +179,9 @@ namespace API.Data.Migrations
                     b.Property<int>("PayrollID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("SuperFund")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SuperUID")
                         .HasColumnType("TEXT");
 

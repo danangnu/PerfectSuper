@@ -82,6 +82,7 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PayrollID = table.Column<int>(type: "INTEGER", nullable: false),
+                    SuperFund = table.Column<string>(type: "TEXT", nullable: true),
                     MemberID = table.Column<string>(type: "TEXT", nullable: true),
                     Fullname = table.Column<string>(type: "TEXT", nullable: true),
                     DOB = table.Column<string>(type: "TEXT", nullable: true),

@@ -22,7 +22,7 @@ namespace API.Data
                         join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
-                        where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
+                        //where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
                         select new {
                             USI = accrual.USI,
                             PayrollID = employee.PayrollID,
@@ -112,7 +112,7 @@ namespace API.Data
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
-                            TFN = r.TFN,
+                            TFN = r.TFN.Replace(" ", ""),
                             GivenName = employee.GivenName,
                             OtherGivenName = employee.OtherGivenName,
                             LastName = employee.FamilyName,
@@ -123,7 +123,9 @@ namespace API.Data
                             Locality = employee.Locality,
                             State = employee.State,
                             Postcode = employee.Postcode,
-                            Country = employee.Country
+                            Country = employee.Country,
+                            SuperFund = r.SuperFund,
+                            MemberID = r.MemberID
                         }).ToListAsync();
 
         return query;
@@ -131,13 +133,13 @@ namespace API.Data
 
     public async Task<IEnumerable<dynamic>> GetAccrualExcelFilterAsync()
     {
-       var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
+       var query = await (from employee in _context.tblEmployees
+                        //join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
-                        where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
+                        //where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
                         select new {
-                            TFN = r.TFN,
+                            TFN = r.TFN.Replace(" ", ""),
                             GivenName = employee.GivenName,
                             OtherGivenName = employee.OtherGivenName,
                             LastName = employee.FamilyName,
@@ -148,7 +150,9 @@ namespace API.Data
                             Locality = employee.Locality,
                             State = employee.State,
                             Postcode = employee.Postcode,
-                            Country = employee.Country
+                            Country = employee.Country,
+                            SuperFund = r.SuperFund,
+                            MemberID = r.MemberID
                         }).ToListAsync();
 
         return query;

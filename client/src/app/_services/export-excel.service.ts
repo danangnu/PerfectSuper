@@ -20,13 +20,13 @@ export class ExportExcelService {
     // tslint:disable-next-line: prefer-const
     let workbook = new Workbook();
     // tslint:disable-next-line: prefer-const
-    let worksheet = workbook.addWorksheet('Employee Details');
+    let worksheet = workbook.addWorksheet('Stapled Super');
 
     // Add Row and formatting
     worksheet.mergeCells('C1', 'F4');
     // tslint:disable-next-line: prefer-const
     let titleRow = worksheet.getCell('C1');
-    titleRow.value = 'Employee Details';
+    titleRow.value = 'Stapled Super';
     titleRow.font = {
       name: 'Calibri',
       size: 16,
@@ -113,7 +113,7 @@ export class ExportExcelService {
     worksheet.getColumn(10).width = 15;
     worksheet.getColumn(11).width = 12;
     worksheet.getColumn(12).width = 13;
-    worksheet.getColumn(13).width = 20;
+    worksheet.getColumn(13).width = 40;
     worksheet.getColumn(14).width = 21;
     worksheet.getColumn(15).width = 20;
     worksheet.getColumn(19).width = 17;
@@ -138,7 +138,7 @@ export class ExportExcelService {
 
     // Footer Row
     // tslint:disable-next-line: prefer-const
-    let footerRow = worksheet.addRow(['Perfect Super at ' + date]);
+    let footerRow = worksheet.addRow(['Stapled Super at ' + date]);
     footerRow.getCell(1).fill = {
       type: 'pattern',
       pattern: 'solid',
@@ -152,13 +152,13 @@ export class ExportExcelService {
     const data2: Accrual[] = excelData2.data;
 
     // tslint:disable-next-line: prefer-const
-    let worksheet2 = workbook.addWorksheet('Super Perfect');
+    let worksheet2 = workbook.addWorksheet('Perfect Super');
 
     // Add Row and formatting
     worksheet2.mergeCells('C1', 'F4');
     // tslint:disable-next-line: prefer-const
     let titleRow2 = worksheet2.getCell('C1');
-    titleRow2.value = title2;
+    titleRow2.value = 'Perfect Super';
     titleRow2.font = {
       name: 'Calibri',
       size: 16,
