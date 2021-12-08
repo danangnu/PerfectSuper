@@ -145,6 +145,8 @@ export class PerfectsComponent implements OnInit {
   }
 
   loadAccrualExport() {
+    this.dataForExcel = [];
+    this.dataForExcel2 = [];
     if (Number(this.selectedDevice) === 2) {
       this.accrualService.getAccrual2().subscribe((accrual) => {
         this.accrual = accrual;

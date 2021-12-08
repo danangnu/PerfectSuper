@@ -215,7 +215,7 @@ function PerfectsComponent_ng_template_57_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](16, "Regular");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](17, "option", 31);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](18, "Sunsuper and member number is NULL");
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](18, "Stapled Super");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
@@ -362,6 +362,8 @@ class PerfectsComponent {
         return headers;
     }
     loadAccrualExport() {
+        this.dataForExcel = [];
+        this.dataForExcel2 = [];
         if (Number(this.selectedDevice) === 2) {
             this.accrualService.getAccrual2().subscribe((accrual) => {
                 this.accrual = accrual;
@@ -1340,12 +1342,12 @@ class ExportExcelService {
         // tslint:disable-next-line: prefer-const
         let workbook = new exceljs__WEBPACK_IMPORTED_MODULE_0__["Workbook"]();
         // tslint:disable-next-line: prefer-const
-        let worksheet = workbook.addWorksheet('Employee Details');
+        let worksheet = workbook.addWorksheet('Stapled Super');
         // Add Row and formatting
         worksheet.mergeCells('C1', 'F4');
         // tslint:disable-next-line: prefer-const
         let titleRow = worksheet.getCell('C1');
-        titleRow.value = 'Employee Details';
+        titleRow.value = 'Stapled Super';
         titleRow.font = {
             name: 'Calibri',
             size: 16,
@@ -1424,7 +1426,7 @@ class ExportExcelService {
         worksheet.getColumn(10).width = 15;
         worksheet.getColumn(11).width = 12;
         worksheet.getColumn(12).width = 13;
-        worksheet.getColumn(13).width = 20;
+        worksheet.getColumn(13).width = 40;
         worksheet.getColumn(14).width = 21;
         worksheet.getColumn(15).width = 20;
         worksheet.getColumn(19).width = 17;
@@ -1447,7 +1449,7 @@ class ExportExcelService {
         // worksheet.getColumn(14).numFmt = '#,##0.00;[Red]-#,##0.00';
         // Footer Row
         // tslint:disable-next-line: prefer-const
-        let footerRow = worksheet.addRow(['Perfect Super at ' + date]);
+        let footerRow = worksheet.addRow(['Stapled Super at ' + date]);
         footerRow.getCell(1).fill = {
             type: 'pattern',
             pattern: 'solid',
@@ -1459,12 +1461,12 @@ class ExportExcelService {
         const header2 = excelData2.headers;
         const data2 = excelData2.data;
         // tslint:disable-next-line: prefer-const
-        let worksheet2 = workbook.addWorksheet('Super Perfect');
+        let worksheet2 = workbook.addWorksheet('Perfect Super');
         // Add Row and formatting
         worksheet2.mergeCells('C1', 'F4');
         // tslint:disable-next-line: prefer-const
         let titleRow2 = worksheet2.getCell('C1');
-        titleRow2.value = title2;
+        titleRow2.value = 'Perfect Super';
         titleRow2.font = {
             name: 'Calibri',
             size: 16,
