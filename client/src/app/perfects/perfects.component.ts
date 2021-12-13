@@ -148,50 +148,29 @@ export class PerfectsComponent implements OnInit {
     this.dataForExcel = [];
     this.dataForExcel2 = [];
     if (Number(this.selectedDevice) === 2) {
-      this.accrualService.getAccrual2().subscribe((accrual) => {
-        this.accrual = accrual;
-        accrual.forEach((row) => {
-          this.dataForExcel2.push(Object.values(row));
+      this.accrualService.getAccrualExcel().subscribe((accrualin) => {
+        accrualin.forEach((row) => {
+          this.dataForExcel.push(Object.values(row));
         });
-        this.accrualService.getAccrualExcel2().subscribe((accrualin) => {
-          accrualin.forEach((row) => {
-            this.dataForExcel.push(Object.values(row));
-          });
-          const reportData = {
-            title: 'EmployeeDetails',
+        const reportData = {
+            title: 'Stapled Super',
             data: this.dataForExcel,
             headers: Object.keys(accrualin[0]),
           };
-          const reportData2 = {
-            title: 'PerfectSuper',
-            data: this.dataForExcel2,
-            headers: Object.keys(accrual[0]),
-          };
-          this.ete.exportExcel(reportData, reportData2);
+        this.ete.exportExcel(reportData);
         });
-      });
     } else {
       this.accrualService.getAccrual().subscribe((accrual) => {
         this.accrual = accrual;
         accrual.forEach((row) => {
           this.dataForExcel2.push(Object.values(row));
         });
-        this.accrualService.getAccrualExcel().subscribe((accrualin) => {
-          accrualin.forEach((rowin) => {
-            this.dataForExcel.push(Object.values(rowin));
-          });
-          const reportData = {
-            title: 'PerfectSuper',
-            data: this.dataForExcel,
-            headers: Object.keys(accrualin[0]),
-          };
-          const reportData2 = {
-            title: 'PerfectSuper',
+        const reportData2 = {
+            title: 'Perfect Super',
             data: this.dataForExcel2,
             headers: Object.keys(accrual[0]),
           };
-          this.ete.exportExcel(reportData, reportData2);
-        });
+        this.ete.exportExcel(reportData2);
       });
     }
   }
