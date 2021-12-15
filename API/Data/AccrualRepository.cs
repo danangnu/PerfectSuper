@@ -4,7 +4,6 @@ using API.Entities;
 using API.Interfaces;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Data
 {
@@ -19,7 +18,8 @@ namespace API.Data
     public async Task<IEnumerable<dynamic>> GetAccrualErrorAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
+                        equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         //where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
@@ -58,13 +58,14 @@ namespace API.Data
                             Phone2 = employee.Phone2
                         }).ToListAsync();
 
-        return query;
+        return query.OrderBy(x => x.FirstName);
     }
 
     public async Task<IEnumerable<dynamic>> GetAccrualAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
+                        equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
@@ -102,13 +103,14 @@ namespace API.Data
                             Phone2 = employee.Phone2
                         }).ToListAsync();
 
-        return query;
+        return query.OrderBy(x => x.FirstName);
     }
 
     public async Task<IEnumerable<dynamic>> GetAccrualExcelAsync()
     {
        var query = await (from accrual in _context.tblAccrual
-                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
+                        join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
+                        equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
@@ -128,7 +130,7 @@ namespace API.Data
                             MemberID = r.MemberID
                         }).ToListAsync();
 
-        return query;
+        return query.OrderBy(x => x.GivenName);
     }
 
     public async Task<IEnumerable<dynamic>> GetAccrualExcelFilterAsync()
@@ -155,7 +157,7 @@ namespace API.Data
                             MemberID = r.MemberID
                         }).ToListAsync();
 
-        return query;
+        return query.OrderBy(x => x.GivenName);
     }
 
     public async Task<bool> SaveAllAsync()
