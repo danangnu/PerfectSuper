@@ -44,7 +44,7 @@ namespace API.Controllers
                     new[] { Environment.NewLine },
                     StringSplitOptions.None
                     );
-                if (strlines[0].Contains("Allied Recruitment"))
+                if (strlines[0].Contains("Allied Recruitment") || strlines[0].Contains("Allied Service Entity"))
                 {
                     if (await _context.tblAccrual.AnyAsync())
                     {
@@ -123,7 +123,7 @@ namespace API.Controllers
                                 Spouse = strlines[i].TrimEnd();
                                 Spouse = strlines[i].TrimStart();
                             }
-                            while (!Spouse.Contains("Superannuation -"));
+                            while (!Spouse.Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
 
                             //Spouse
                             int y = i;
@@ -154,7 +154,7 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
@@ -187,7 +187,7 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
@@ -220,7 +220,7 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
@@ -253,7 +253,7 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
@@ -286,7 +286,7 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
@@ -319,12 +319,12 @@ namespace API.Controllers
                                     {
                                         i += 1;
                                     }
-                                    while (!strlines[i].Contains("Superannuation -"));
+                                    while (!strlines[i].Contains("Superannuation -") && !strlines[i].Contains("Super Guarantee"));
                                 }
                             }
 
                             var SuperGuaranteeTot = string.Empty;
-                            if (Spouse.Contains("Superannuation -"))
+                            if (Spouse.Contains("Super Guarantee") || Spouse.Contains("Superannuation -"))
                             {
                                 matches = regex.Matches(Spouse);
                                 if (matches.Count > 0)
