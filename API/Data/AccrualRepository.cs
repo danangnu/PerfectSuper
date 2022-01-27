@@ -22,7 +22,6 @@ namespace API.Data
                         equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
                         from r in supers.DefaultIfEmpty()
-                        //where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
                         select new {
                             USI = accrual.USI,
                             PayrollID = employee.PayrollID,
@@ -50,9 +49,9 @@ namespace API.Data
                             TFN = r.TFN,
                             EmpStartDate = r.EmpStartDate,
                             EmpEndDate = r.EmpEndDate,
-                            EmpCategory = r.EmpCategory,
+                            //EmpCategory = r.EmpCategory,
                             EmpStatus = r.EmpStatus,
-                            CustomList2 = employee.CustomList2,
+                            //CustomList2 = employee.CustomList2,
                             Email = employee.Email,
                             Phone1 = employee.Phone1,
                             Phone2 = employee.Phone2

@@ -160,13 +160,16 @@ export class ExportExcelService {
     }
     worksheet.addRow([]);
 
-    // worksheet.getColumn(8).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(9).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(10).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(11).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(12).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(13).numFmt = '#,##0.00;[Red]-#,##0.00';
-    // worksheet.getColumn(14).numFmt = '#,##0.00;[Red]-#,##0.00';
+    if (title === 'Perfect Super')
+    {
+      worksheet.getColumn(8).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(9).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(10).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(11).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(12).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(13).numFmt = '#,##0.00;[Red]-#,##0.00';
+      worksheet.getColumn(14).numFmt = '#,##0.00;[Red]-#,##0.00';
+    }
 
     // Footer Row
     // tslint:disable-next-line: prefer-const

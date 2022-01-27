@@ -153,23 +153,23 @@ export class PerfectsComponent implements OnInit {
           this.dataForExcel.push(Object.values(row));
         });
         const reportData = {
-            title: 'Stapled Super',
-            data: this.dataForExcel,
-            headers: Object.keys(accrualin[0]),
-          };
+          title: 'Stapled Super',
+          data: this.dataForExcel,
+          headers: Object.keys(accrualin[0]),
+        };
         this.ete.exportExcel(reportData);
-        });
+      });
     } else {
-      this.accrualService.getAccrual().subscribe((accrual) => {
+      this.accrualService.getAccrual2().subscribe((accrual) => {
         this.accrual = accrual;
         accrual.forEach((row) => {
           this.dataForExcel2.push(Object.values(row));
         });
         const reportData2 = {
-            title: 'Perfect Super',
-            data: this.dataForExcel2,
-            headers: Object.keys(accrual[0]),
-          };
+          title: 'Perfect Super',
+          data: this.dataForExcel2,
+          headers: Object.keys(accrual[0]),
+        };
         this.ete.exportExcel(reportData2);
       });
     }
