@@ -20,7 +20,8 @@ namespace API.Data
        var query = await (from accrual in _context.tblAccrual
                         join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
                         equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
-                        join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
+                        join payroll in _context.tblPayroll on new { d1 = accrual.MemberID, d2 = accrual.SuperFund, d3 = employee.PayrollID }
+                        equals new { d1 = payroll.MemberID, d2 = payroll.SuperFund, d3 = payroll.PayrollID } into supers
                         from r in supers.DefaultIfEmpty()
                         select new {
                             USI = accrual.USI,
@@ -65,8 +66,9 @@ namespace API.Data
        var query = await (from accrual in _context.tblAccrual
                         join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
                         equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
-                        join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
-                        from r in supers.DefaultIfEmpty()
+                        join payroll in _context.tblPayroll on new { d1 = accrual.MemberID, d2 = accrual.SuperFund, d3 = employee.PayrollID }
+                        equals new { d1 = payroll.MemberID, d2 = payroll.SuperFund, d3 = payroll.PayrollID } into supers
+                        from r in supers
                         select new {
                             USI = accrual.USI,
                             PayrollID = employee.PayrollID,
@@ -110,8 +112,9 @@ namespace API.Data
        var query = await (from accrual in _context.tblAccrual
                         join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } 
                         equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
-                        join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
-                        from r in supers.DefaultIfEmpty()
+                        join payroll in _context.tblPayroll on new { d1 = accrual.MemberID, d2 = accrual.SuperFund, d3 = employee.PayrollID }
+                        equals new { d1 = payroll.MemberID, d2 = payroll.SuperFund, d3 = payroll.PayrollID } into supers
+                        from r in supers
                         select new {
                             TFN = r.TFN.Replace(" ", ""),
                             GivenName = employee.GivenName,
@@ -137,7 +140,7 @@ namespace API.Data
        var query = await (from employee in _context.tblEmployees
                         //join employee in _context.tblEmployees on new { c1 = accrual.LastName, c2 = accrual.FirstName } equals new { c1 = employee.FamilyName, c2 = employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on employee.PayrollID equals payroll.PayrollID into supers
-                        from r in supers.DefaultIfEmpty()
+                        from r in supers
                         //where accrual.SuperFund.ToLower().StartsWith("sunsuper") && r.MemberID == ""
                         select new {
                             TFN = r.TFN.Replace(" ", ""),
