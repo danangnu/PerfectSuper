@@ -22,7 +22,7 @@ namespace API.Data
                         equals new { c1 = employee.FamilyName, c2 = string.IsNullOrEmpty(employee.OtherGivenName) ? employee.GivenName : employee.GivenName + " " + employee.OtherGivenName } 
                         join payroll in _context.tblPayroll on new { d1 = accrual.MemberID, d2 = accrual.SuperFund, d3 = employee.PayrollID }
                         equals new { d1 = payroll.MemberID, d2 = payroll.SuperFund, d3 = payroll.PayrollID } into supers
-                        from r in supers.DefaultIfEmpty()
+                        from r in supers
                         select new {
                             USI = accrual.USI,
                             PayrollID = employee.PayrollID,

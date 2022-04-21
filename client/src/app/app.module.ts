@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { ZoiperComponent } from './zoiper/zoiper.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
     NavComponent,
     PerfectsComponent,
     FileManagerComponent,
+    ZoiperComponent,
   ],
   imports: [
     BrowserModule,
